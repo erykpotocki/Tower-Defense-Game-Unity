@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5b0e3855c663b646a7fdbef7579e37f, type: 3}
+  m_Name: Bron
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponName: Proca
+  weaponSprite: {fileID: 0}
+  baseDamage: 5
+  attackInterval: 2
+  critChancePercent: 0
+  shotsPerAttack: 1
+  knockbackChancePercent: 0
+  projectileSprite: {fileID: 0}
