@@ -6,7 +6,7 @@ public class CastleHealth : MonoBehaviour
 
     [Header("Castle Stats")]
     [SerializeField] private float baseMaxHealth = 100f;
-    [SerializeField] private float healthPerLevel = 10f;
+    [SerializeField] private float healthPerLevel = 11f;
 
     private float maxHealth;
     private float currentHealth;
