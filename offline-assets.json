@@ -1,0 +1,15 @@
+{
+  "release": "8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e",
+  "files": [
+    "Build/050b5353d5e8870e0a0d818fa0206d34.loader.js",
+    "Build/88915a79fa38103d293499bc215d2d5f.jpg",
+    "Build/c05601e177070dd0dcc7fb882c76f76e.data.unityweb",
+    "Build/df6e0657053493cb4eaf47ee6e6eccdb.framework.js.unityweb",
+    "Build/edb33dbd4648a86ecf330355303d77af.wasm.unityweb",
+    "icons/icon-192.png",
+    "icons/icon-512.png",
+    "icons/maskable-512.png",
+    "manifest.webmanifest",
+    "style.css"
+  ]
+}

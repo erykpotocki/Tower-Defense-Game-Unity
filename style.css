@@ -1,0 +1,22 @@
+:root { color-scheme: dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #101820; color: #fff; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; overscroll-behavior: none; }
+body { position: fixed; inset: 0; touch-action: none; -webkit-user-select: none; user-select: none; }
+#unity-canvas { position: absolute; inset: 0; display: block; width: 100vw; height: 100vh; height: 100dvh; background: #101820; outline: none; touch-action: none; }
+#safe-area-probe { position: fixed; inset: 0; visibility: hidden; pointer-events: none; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+#loading-screen { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: max(18px, env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) max(18px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); background: radial-gradient(ellipse at center, #1f3841, #101820 75%); touch-action: manipulation; }
+#loading-screen[hidden], [hidden] { display: none !important; }
+.loading-card { width: min(440px, 100%); max-height: 100%; overflow: auto; text-align: center; }
+.game-icon { display: block; margin: 0 auto 14px; border-radius: 18px; box-shadow: 0 3px 12px #0009; }
+h1 { margin: 0 0 14px; font-size: clamp(24px, 5vw, 34px); text-shadow: 0 2px 2px #000; }
+p { margin: 12px 0; line-height: 1.4; }
+#progress-track { height: 12px; overflow: hidden; border: 2px solid #05090c; border-radius: 8px; background: #03080b; }
+#progress-fill { width: 0; height: 100%; border-radius: 5px; background: linear-gradient(#f4d78f, #ad802f); transition: width .12s linear; }
+.loading-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+button { min-height: 42px; border: 1px solid #9d7f42; border-radius: 7px; padding: 8px 14px; font: inherit; color: #fff; background: #172b32; cursor: pointer; text-shadow: 0 1px #000; touch-action: manipulation; }
+button:hover, button:focus-visible { background: #294650; outline: 2px solid #f4d78f; }
+.rotate-hint { display: none; color: #d3dce0; font-size: 14px; }
+#error-details { margin-top: 20px; text-align: left; font-size: 13px; }
+#error-text { white-space: pre-wrap; overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
+@media (orientation: portrait) and (max-width: 900px) { .rotate-hint { display: block; } }
+@media (max-height: 420px) { .game-icon { width: 52px; height: 52px; margin-bottom: 6px; } h1 { font-size: 24px; margin-bottom: 8px; } p { margin: 8px 0; } .loading-actions { margin-top: 10px; } }

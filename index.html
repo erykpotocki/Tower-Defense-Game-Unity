@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pl" data-release="8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tower Defense">
+  <meta name="description" content="Broń zamku przed dinozaurami, rozwijaj wyposażenie i przechodź kolejne etapy.">
+  <title>Tower Defense</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./style.css?v=8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+</head>
+<body>
+  <canvas id="unity-canvas" width="960" height="600" tabindex="-1" aria-label="Tower Defense"></canvas>
+  <div id="safe-area-probe" aria-hidden="true"></div>
+  <section id="loading-screen" aria-live="polite">
+    <div class="loading-card">
+      <img class="game-icon" src="./icons/icon-192.png" alt="" width="80" height="80">
+      <h1>Tower Defense</h1>
+      <p id="loading-status">Przygotowywanie gry…</p>
+      <div id="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progress-fill"></div>
+      </div>
+      <p class="rotate-hint">Na telefonie obróć ekran do poziomu.</p>
+      <div class="loading-actions">
+        <button id="fullscreen-button" type="button">Pełny ekran</button>
+        <button id="install-button" type="button" hidden>Zainstaluj</button>
+        <button id="retry-button" type="button" hidden>Spróbuj ponownie</button>
+      </div>
+      <details id="error-details" hidden><summary>Szczegóły błędu</summary><pre id="error-text"></pre></details>
+    </div>
+  </section>
+<script>
+(function () {
+  "use strict";
+  const RELEASE = "8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e";
+  const base = new URL("./", window.location.href);
+  const canvas = document.getElementById("unity-canvas");
+  const loading = document.getElementById("loading-screen");
+  const status = document.getElementById("loading-status");
+  const progress = document.getElementById("progress-fill");
+  const progressTrack = document.getElementById("progress-track");
+  const fullscreenButton = document.getElementById("fullscreen-button");
+  const installButton = document.getElementById("install-button");
+  let installPrompt = null;
+  let failed = false;
+
+  function buildFile(filename) {
+    const url = new URL("Build/" + filename, base);
+    url.searchParams.set("v", RELEASE);
+    return url.href;
+  }
+
+  // CSS pixels relative to the full-bleed canvas; a WebGL bridge can scale these to Screen pixels.
+  window.towerSafeArea = function () {
+    const css = getComputedStyle(document.getElementById("safe-area-probe"));
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
+    return {
+      left: Math.min(width / 2, parseFloat(css.paddingLeft) || 0),
+      right: Math.min(width / 2, parseFloat(css.paddingRight) || 0),
+      top: Math.min(height / 2, parseFloat(css.paddingTop) || 0),
+      bottom: Math.min(height / 2, parseFloat(css.paddingBottom) || 0),
+      width: width,
+      height: height
+    };
+  };
+
+  function showFailure(error) {
+    failed = true;
+    loading.hidden = false;
+    status.textContent = "Nie udało się uruchomić gry. Sprawdź połączenie i spróbuj ponownie.";
+    document.getElementById("retry-button").hidden = false;
+    document.getElementById("error-details").hidden = false;
+    document.getElementById("error-text").textContent = String(error || "Nieznany błąd ładowania.").slice(0, 2000);
+    console.error(error);
+  }
+
+  fullscreenButton.addEventListener("click", function () {
+    const target = document.documentElement;
+    const request = target.requestFullscreen || target.webkitRequestFullscreen;
+    if (!request) {
+      status.textContent = "Gra wypełni dostępny obszar przeglądarki. Na iPhonie pełny ekran uzyskasz po dodaniu do ekranu początkowego.";
+      return;
+    }
+    try {
+      const pending = request.call(target);
+      Promise.resolve(pending).then(function () {
+        if (screen.orientation && screen.orientation.lock)
+          return screen.orientation.lock("landscape").catch(function () {});
+      }).catch(function () {});
+    } catch (_) {}
+  });
+  document.getElementById("retry-button").addEventListener("click", function () { window.location.reload(); });
+
+  window.addEventListener("beforeinstallprompt", function (event) {
+    // Keep the browser install affordance available after the loader is hidden.
+    installPrompt = event;
+    installButton.hidden = false;
+  });
+  installButton.addEventListener("click", async function () {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    installButton.hidden = true;
+  });
+  window.addEventListener("appinstalled", function () {
+    installPrompt = null;
+    installButton.hidden = true;
+  });
+
+  // Registration starts after Unity boot succeeds, so offline preparation never blocks the game loader.
+  function prepareOffline() {
+    if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+    navigator.serviceWorker.register(new URL("sw.js?v=" + RELEASE, base).href, { scope: base.href, updateViaCache: "none" })
+      .catch(function (error) { console.warn("Offline cache could not be prepared:", error); });
+  }
+
+  const config = {
+    arguments: [],
+    dataUrl: buildFile("c05601e177070dd0dcc7fb882c76f76e.data.unityweb"),
+    frameworkUrl: buildFile("df6e0657053493cb4eaf47ee6e6eccdb.framework.js.unityweb"),
+    codeUrl: buildFile("edb33dbd4648a86ecf330355303d77af.wasm.unityweb"),
+    streamingAssetsUrl: new URL("StreamingAssets", base).href,
+    companyName: "Eryk Potocki",
+    productName: "Tower Defense",
+    productVersion: "2026.10.28.1609",
+    autoSyncPersistentDataPath: true,
+    devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+    showBanner: function (message, type) {
+      if (type === "error") showFailure(message);
+      else console.warn(message);
+    }
+  };
+
+  if (!("WebAssembly" in window)) {
+    showFailure("Ta przeglądarka nie obsługuje WebAssembly.");
+    return;
+  }
+  const script = document.createElement("script");
+  script.src = buildFile("050b5353d5e8870e0a0d818fa0206d34.loader.js");
+  script.onerror = function () { showFailure("Nie można pobrać pliku uruchamiającego Unity. " + script.src); };
+  script.onload = function () {
+    if (typeof createUnityInstance !== "function") {
+      showFailure("Plik uruchamiający Unity nie został poprawnie załadowany.");
+      return;
+    }
+    createUnityInstance(canvas, config, function (value) {
+      const percent = Math.round(Math.max(0, Math.min(1, value)) * 100);
+      progress.style.width = percent + "%";
+      progressTrack.setAttribute("aria-valuenow", String(percent));
+      status.textContent = "Wczytywanie gry… " + percent + "%";
+    }).then(function (instance) {
+      if (failed) return;
+      window.towerUnityInstance = instance;
+      loading.hidden = true;
+      canvas.focus();
+      prepareOffline();
+    }).catch(showFailure);
+  };
+  document.body.appendChild(script);
+})();
+</script>
+</body>
+</html>
