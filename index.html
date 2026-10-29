@@ -1,31 +1,30 @@
 <!doctype html>
-<html lang="pl" data-release="8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+<html lang="pl" data-release="6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-visual">
   <meta name="theme-color" content="#101820">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Tower Defense">
+  <meta name="apple-mobile-web-app-title" content="Ageward">
   <meta name="description" content="Broń zamku przed dinozaurami, rozwijaj wyposażenie i przechodź kolejne etapy.">
-  <title>Tower Defense</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+  <title>Ageward</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./style.css?v=8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./style.css?v=6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c">
 </head>
 <body>
-  <canvas id="unity-canvas" width="960" height="600" tabindex="-1" aria-label="Tower Defense"></canvas>
+  <canvas id="unity-canvas" width="960" height="600" tabindex="-1" aria-label="Ageward"></canvas>
   <div id="safe-area-probe" aria-hidden="true"></div>
   <section id="loading-screen" aria-live="polite">
     <div class="loading-card">
       <img class="game-icon" src="./icons/icon-192.png" alt="" width="80" height="80">
-      <h1>Tower Defense</h1>
+      <h1>Ageward</h1>
       <p id="loading-status">Przygotowywanie gry…</p>
       <div id="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div id="progress-fill"></div>
       </div>
-      <p class="rotate-hint">Na telefonie obróć ekran do poziomu.</p>
       <div class="loading-actions">
         <button id="fullscreen-button" type="button">Pełny ekran</button>
         <button id="install-button" type="button" hidden>Zainstaluj</button>
@@ -34,10 +33,19 @@
       <details id="error-details" hidden><summary>Szczegóły błędu</summary><pre id="error-text"></pre></details>
     </div>
   </section>
+  <section id="orientation-guard" role="dialog" aria-modal="true" aria-labelledby="orientation-title">
+    <div class="orientation-card">
+      <div class="orientation-device" aria-hidden="true"></div>
+      <h2 id="orientation-title">Gra działa tylko poziomo</h2>
+      <p>Obróć urządzenie lub poszerz okno, aby kontynuować.</p>
+      <button id="orientation-button" type="button">Włącz tryb poziomy</button>
+    </div>
+  </section>
+  <script src="./orientation.js?v=6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c"></script>
 <script>
 (function () {
   "use strict";
-  const RELEASE = "8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e";
+  const RELEASE = "6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c";
   const base = new URL("./", window.location.href);
   const canvas = document.getElementById("unity-canvas");
   const loading = document.getElementById("loading-screen");
@@ -82,19 +90,7 @@
   }
 
   fullscreenButton.addEventListener("click", function () {
-    const target = document.documentElement;
-    const request = target.requestFullscreen || target.webkitRequestFullscreen;
-    if (!request) {
-      status.textContent = "Gra wypełni dostępny obszar przeglądarki. Na iPhonie pełny ekran uzyskasz po dodaniu do ekranu początkowego.";
-      return;
-    }
-    try {
-      const pending = request.call(target);
-      Promise.resolve(pending).then(function () {
-        if (screen.orientation && screen.orientation.lock)
-          return screen.orientation.lock("landscape").catch(function () {});
-      }).catch(function () {});
-    } catch (_) {}
+    window.towerEnterLandscape();
   });
   document.getElementById("retry-button").addEventListener("click", function () { window.location.reload(); });
 
@@ -124,13 +120,13 @@
 
   const config = {
     arguments: [],
-    dataUrl: buildFile("c05601e177070dd0dcc7fb882c76f76e.data.unityweb"),
-    frameworkUrl: buildFile("df6e0657053493cb4eaf47ee6e6eccdb.framework.js.unityweb"),
-    codeUrl: buildFile("edb33dbd4648a86ecf330355303d77af.wasm.unityweb"),
+    dataUrl: buildFile("ae51cf06ef96fba78631144502723841.data.unityweb"),
+    frameworkUrl: buildFile("8572a8186b0b0aa00ac139295cce1ca3.framework.js.unityweb"),
+    codeUrl: buildFile("c10af71323fe2c1358e1b23ac24847e4.wasm.unityweb"),
     streamingAssetsUrl: new URL("StreamingAssets", base).href,
     companyName: "Eryk Potocki",
-    productName: "Tower Defense",
-    productVersion: "2026.10.28.1609",
+    productName: "Ageward",
+    productVersion: "2026.10.29.1153",
     autoSyncPersistentDataPath: true,
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) {
@@ -144,7 +140,7 @@
     return;
   }
   const script = document.createElement("script");
-  script.src = buildFile("050b5353d5e8870e0a0d818fa0206d34.loader.js");
+  script.src = buildFile("ee8475cb243489e039c381d446521e83.loader.js");
   script.onerror = function () { showFailure("Nie można pobrać pliku uruchamiającego Unity. " + script.src); };
   script.onload = function () {
     if (typeof createUnityInstance !== "function") {

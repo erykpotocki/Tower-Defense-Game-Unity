@@ -1,11 +1,11 @@
 "use strict";
-const RELEASE = "8cf4f88422cd67b8ae080c46160ea38e14d93bbea7e021be05647ce7030a704e";
+const RELEASE = "6c95153100cae663280368504fe3d74750c39b9075d3a03f164eae0836207b6c";
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = "tower-pwa-" + encodeURIComponent(SCOPE.pathname) + "-";
 const CACHE_NAME = PREFIX + RELEASE;
 const INFO_URL = new URL("__pwa_cache_info__", SCOPE).href;
-const CORE_FILES = ["./", "index.html", "style.css", "manifest.webmanifest", "offline-assets.json",
-  "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png"];
+const CORE_FILES = ["./", "index.html", "style.css", "orientation.js", "manifest.webmanifest", "offline-assets.json",
+  "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png"];
 
 function scopedUrl(path) {
   const url = new URL(path, SCOPE);
@@ -109,7 +109,7 @@ self.addEventListener("fetch", function (event) {
   const relative = url.pathname.slice(SCOPE.pathname.length);
   const streaming = relative.startsWith("StreamingAssets/");
   const allowed = relative.startsWith("Build/") || streaming || relative.startsWith("icons/") ||
-    relative === "style.css" || relative === "manifest.webmanifest" || relative === "offline-assets.json";
+    relative === "style.css" || relative === "orientation.js" || relative === "manifest.webmanifest" || relative === "offline-assets.json";
   if (!allowed) return;
   const version = url.searchParams.get("v") || RELEASE;
   event.respondWith((async function () {

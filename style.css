@@ -15,8 +15,18 @@ p { margin: 12px 0; line-height: 1.4; }
 .loading-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 button { min-height: 42px; border: 1px solid #9d7f42; border-radius: 7px; padding: 8px 14px; font: inherit; color: #fff; background: #172b32; cursor: pointer; text-shadow: 0 1px #000; touch-action: manipulation; }
 button:hover, button:focus-visible { background: #294650; outline: 2px solid #f4d78f; }
-.rotate-hint { display: none; color: #d3dce0; font-size: 14px; }
 #error-details { margin-top: 20px; text-align: left; font-size: 13px; }
 #error-text { white-space: pre-wrap; overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
-@media (orientation: portrait) and (max-width: 900px) { .rotate-hint { display: block; } }
 @media (max-height: 420px) { .game-icon { width: 52px; height: 52px; margin-bottom: 6px; } h1 { font-size: 24px; margin-bottom: 8px; } p { margin: 8px 0; } .loading-actions { margin-top: 10px; } }
+
+/* The game stays hidden until actual landscape has been confirmed by orientation.js.
+   Do not use a viewport orientation media query: the keyboard can invert its result. */
+#unity-canvas { visibility: hidden; pointer-events: none; }
+.landscape-ready #unity-canvas { visibility: visible; pointer-events: auto; }
+:root:not(.landscape-ready) #loading-screen { visibility: hidden; pointer-events: none; }
+#orientation-guard { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px)); background: #101820; text-align: center; touch-action: manipulation; }
+.orientation-card { max-width: 360px; }
+.orientation-device { width: 108px; height: 62px; margin: 0 auto 28px; border: 4px solid #e1bc70; border-radius: 12px; box-shadow: 0 0 0 3px #000, 0 6px 20px #0008; }
+.orientation-device::before { content: ""; display: block; width: 5px; height: 18px; margin: 18px 5px; border-radius: 3px; background: #e1bc70; }
+#orientation-guard h2 { font-size: 25px; margin: 0 0 14px; text-shadow: 0 2px 3px #000; }
+#orientation-guard p { color: #d3dce0; margin-bottom: 22px; }
