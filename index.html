@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl" data-release="2376afeccf495343b3cbf9d89d1b638e566ce758fd48bb0a678f9773c26f5326">
+<html lang="pl" data-release="6a51db018ebd8f21e591a985b97ba6f2d6b1421aa41bbb4738d4f4cf15a52833">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-visual">
@@ -9,12 +9,13 @@
   <meta name="apple-mobile-web-app-title" content="Ageward">
   <meta name="description" content="Broń zamku przed dinozaurami, rozwijaj wyposażenie i przechodź kolejne etapy.">
   <title>Ageward</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=2376afeccf495343b3cbf9d89d1b638e566ce758fd48bb0a678f9773c26f5326">
+  <link rel="manifest" href="./manifest.webmanifest?v=6a51db018ebd8f21e591a985b97ba6f2d6b1421aa41bbb4738d4f4cf15a52833">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="./style.css?v=2376afeccf495343b3cbf9d89d1b638e566ce758fd48bb0a678f9773c26f5326">
+  <link rel="stylesheet" href="./style.css?v=6a51db018ebd8f21e591a985b97ba6f2d6b1421aa41bbb4738d4f4cf15a52833">
 </head>
 <body>
+  <main id="game-viewport">
   <canvas id="unity-canvas" width="960" height="600" tabindex="-1" aria-label="Ageward"></canvas>
   <div id="safe-area-probe" aria-hidden="true"></div>
   <section id="loading-screen" aria-live="polite">
@@ -33,19 +34,12 @@
       <details id="error-details" hidden><summary>Szczegóły błędu</summary><pre id="error-text"></pre></details>
     </div>
   </section>
-  <section id="orientation-guard" role="dialog" aria-modal="true" aria-labelledby="orientation-title">
-    <div class="orientation-card">
-      <div class="orientation-device" aria-hidden="true"></div>
-      <h2 id="orientation-title">Gra działa tylko poziomo</h2>
-      <p>Obróć urządzenie lub poszerz okno, aby kontynuować.</p>
-      <button id="orientation-button" type="button">Włącz tryb poziomy</button>
-    </div>
-  </section>
-  <script src="./orientation.js?v=2376afeccf495343b3cbf9d89d1b638e566ce758fd48bb0a678f9773c26f5326"></script>
+  </main>
+  <script src="./orientation.js?v=6a51db018ebd8f21e591a985b97ba6f2d6b1421aa41bbb4738d4f4cf15a52833"></script>
 <script>
 (function () {
   "use strict";
-  const RELEASE = "2376afeccf495343b3cbf9d89d1b638e566ce758fd48bb0a678f9773c26f5326";
+  const RELEASE = "6a51db018ebd8f21e591a985b97ba6f2d6b1421aa41bbb4738d4f4cf15a52833";
   const base = new URL("./", window.location.href);
   const canvas = document.getElementById("unity-canvas");
   const loading = document.getElementById("loading-screen");
@@ -63,20 +57,9 @@
     return url.href;
   }
 
-  // CSS pixels relative to the full-bleed canvas; a WebGL bridge can scale these to Screen pixels.
+  // The viewport adapter also rotates cutout insets when native orientation lock is unavailable.
   window.towerSafeArea = function () {
-    const css = getComputedStyle(document.getElementById("safe-area-probe"));
-    const rect = canvas.getBoundingClientRect();
-    const width = Math.max(1, rect.width);
-    const height = Math.max(1, rect.height);
-    return {
-      left: Math.min(width / 2, parseFloat(css.paddingLeft) || 0),
-      right: Math.min(width / 2, parseFloat(css.paddingRight) || 0),
-      top: Math.min(height / 2, parseFloat(css.paddingTop) || 0),
-      bottom: Math.min(height / 2, parseFloat(css.paddingBottom) || 0),
-      width: width,
-      height: height
-    };
+    return window.towerViewport.safeArea();
   };
 
   function showFailure(error) {
@@ -120,13 +103,13 @@
 
   const config = {
     arguments: [],
-    dataUrl: buildFile("136d444d058939d8313c8fa09ae7d4a0.data.unityweb"),
+    dataUrl: buildFile("84dede5c42808bc18d0dc62f7a57b8cb.data.unityweb"),
     frameworkUrl: buildFile("5a283f5bd8436fd5eddc3e5a2e7b116d.framework.js.unityweb"),
     codeUrl: buildFile("ea4bb42cd75ded730b018250f6931913.wasm.unityweb"),
     streamingAssetsUrl: new URL("StreamingAssets", base).href,
     companyName: "Eryk Potocki",
     productName: "Ageward",
-    productVersion: "2026.10.30.1052",
+    productVersion: "2026.10.30.1813",
     autoSyncPersistentDataPath: true,
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) {
@@ -148,16 +131,23 @@
       return;
     }
     createUnityInstance(canvas, config, function (value) {
-      const percent = Math.round(Math.max(0, Math.min(1, value)) * 100);
+      const percent = Math.min(99, Math.round(Math.max(0, Math.min(1, value)) * 100));
       progress.style.width = percent + "%";
       progressTrack.setAttribute("aria-valuenow", String(percent));
-      status.textContent = "Wczytywanie gry… " + percent + "%";
+      status.textContent = percent < 90 ? "Pobieranie plików gry… " + percent + "%" : "Uruchamianie gry… " + percent + "%";
     }).then(function (instance) {
       if (failed) return;
       window.towerUnityInstance = instance;
-      loading.hidden = true;
-      canvas.focus();
-      prepareOffline();
+      progress.style.width = "100%";
+      progressTrack.setAttribute("aria-valuenow", "100");
+      status.textContent = "Gotowe";
+      // The WebGL build opens MainActivity directly. Keep the same loader until its first frame.
+      requestAnimationFrame(function () { requestAnimationFrame(function () {
+        if (failed) return;
+        loading.hidden = true;
+        canvas.focus();
+        prepareOffline();
+      }); });
     }).catch(showFailure);
   };
   document.body.appendChild(script);
