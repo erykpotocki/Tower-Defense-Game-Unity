@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl" data-release="1f8a2aac4dec23164107ffa018ea8b3e2b53341e346909f84e4d04c1aa85717c">
+<html lang="pl" data-release="486128cbbb7158d53dd804129cbec8ea1b61a39a22463b46cb3b1204cf19cb13">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-visual">
@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-title" content="Ageward">
   <meta name="description" content="Broń zamku przed dinozaurami, rozwijaj wyposażenie i przechodź kolejne etapy.">
   <title>Ageward</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=1f8a2aac4dec23164107ffa018ea8b3e2b53341e346909f84e4d04c1aa85717c">
+  <link rel="manifest" href="./manifest.webmanifest?v=486128cbbb7158d53dd804129cbec8ea1b61a39a22463b46cb3b1204cf19cb13">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="./style.css?v=1f8a2aac4dec23164107ffa018ea8b3e2b53341e346909f84e4d04c1aa85717c">
+  <link rel="stylesheet" href="./style.css?v=486128cbbb7158d53dd804129cbec8ea1b61a39a22463b46cb3b1204cf19cb13">
 </head>
 <body>
   <main id="game-viewport">
@@ -27,7 +27,7 @@
         <div id="progress-fill"></div>
       </div>
       <div class="loading-actions">
-        <button id="fullscreen-button" type="button">Pełny ekran</button>
+        <button id="fullscreen-button" type="button" hidden>Pełny ekran</button>
         <button id="install-button" type="button" hidden>Zainstaluj</button>
         <button id="retry-button" type="button" hidden>Spróbuj ponownie</button>
       </div>
@@ -35,11 +35,11 @@
     </div>
   </section>
   </main>
-  <script src="./orientation.js?v=1f8a2aac4dec23164107ffa018ea8b3e2b53341e346909f84e4d04c1aa85717c"></script>
+  <script src="./orientation.js?v=486128cbbb7158d53dd804129cbec8ea1b61a39a22463b46cb3b1204cf19cb13"></script>
 <script>
 (function () {
   "use strict";
-  const RELEASE = "1f8a2aac4dec23164107ffa018ea8b3e2b53341e346909f84e4d04c1aa85717c";
+  const RELEASE = "486128cbbb7158d53dd804129cbec8ea1b61a39a22463b46cb3b1204cf19cb13";
   const base = new URL("./", window.location.href);
   const canvas = document.getElementById("unity-canvas");
   const loading = document.getElementById("loading-screen");
@@ -72,9 +72,36 @@
     console.error(error);
   }
 
-  fullscreenButton.addEventListener("click", function () {
-    window.towerEnterLandscape();
+  // Embedded app browsers own their outer chrome. Offer this only when a real
+  // document fullscreen request is available, never as a cosmetic canvas resize.
+  let fullscreenFailed = false;
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function canFullscreen() {
+    const embedded = /FBAN|FBAV|FB_IAB|Messenger|Instagram/i.test(navigator.userAgent || "");
+    const target = document.documentElement;
+    const supported = (document.fullscreenEnabled === true && typeof target.requestFullscreen === "function") ||
+      (document.webkitFullscreenEnabled === true && typeof target.webkitRequestFullscreen === "function");
+    return !embedded && supported;
+  }
+  function refreshFullscreenButton() {
+    const standalone = navigator.standalone === true ||
+      (typeof window.matchMedia === "function" && window.matchMedia("(display-mode: standalone)").matches);
+    fullscreenButton.hidden = fullscreenFailed || standalone || isFullscreen() || !canFullscreen();
+  }
+  fullscreenButton.addEventListener("click", async function () {
+    fullscreenButton.disabled = true;
+    try {
+      await window.towerEnterLandscape();
+      if (!isFullscreen()) fullscreenFailed = true;
+    } catch (_) { fullscreenFailed = true; }
+    finally { fullscreenButton.disabled = false; refreshFullscreenButton(); }
   });
+  document.addEventListener("fullscreenchange", refreshFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", refreshFullscreenButton);
+  window.addEventListener("pageshow", refreshFullscreenButton);
+  refreshFullscreenButton();
   document.getElementById("retry-button").addEventListener("click", function () { window.location.reload(); });
 
   window.addEventListener("beforeinstallprompt", function (event) {
@@ -103,13 +130,13 @@
 
   const config = {
     arguments: [],
-    dataUrl: buildFile("e9f96775b8bfba2114add787ff88b694.data.unityweb"),
-    frameworkUrl: buildFile("fdaa08b44e9b42f962970ec34bddf616.framework.js.unityweb"),
-    codeUrl: buildFile("d3962e17de16d5001720680f4064982c.wasm.unityweb"),
+    dataUrl: buildFile("30a1b65895138cb8d09bc2b8425be35f.data.unityweb"),
+    frameworkUrl: buildFile("67ef99241587804d329fe3bf5bd376b3.framework.js.unityweb"),
+    codeUrl: buildFile("5d1e6d440dc8553c73b7606999977f13.wasm.unityweb"),
     streamingAssetsUrl: new URL("StreamingAssets", base).href,
     companyName: "Eryk Potocki",
     productName: "Ageward",
-    productVersion: "2026.10.30.1850",
+    productVersion: "2026.10.31.0943",
     autoSyncPersistentDataPath: true,
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) {
@@ -123,7 +150,7 @@
     return;
   }
   const script = document.createElement("script");
-  script.src = buildFile("b182bccd125623ccc80eaa3296ebe623.loader.js");
+  script.src = buildFile("d775319f6d6393ae9d4aa5bba4559e95.loader.js");
   script.onerror = function () { showFailure("Nie można pobrać pliku uruchamiającego Unity. " + script.src); };
   script.onload = function () {
     if (typeof createUnityInstance !== "function") {
