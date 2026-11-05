@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl" data-release="05912c896a67016e7127f5d2ca09d6839c57753d5aed0983ec1c2f5b6b3e4cd0">
+<html lang="pl" data-release="09c20c92ca50a772c8b058b31070698716ced770ba816aed4ed151f5bcddda73">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-visual">
@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-title" content="Ageward">
   <meta name="description" content="Broń zamku przed dinozaurami, rozwijaj wyposażenie i przechodź kolejne etapy.">
   <title>Ageward</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=05912c896a67016e7127f5d2ca09d6839c57753d5aed0983ec1c2f5b6b3e4cd0">
+  <link rel="manifest" href="./manifest.webmanifest?v=09c20c92ca50a772c8b058b31070698716ced770ba816aed4ed151f5bcddda73">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="./style.css?v=05912c896a67016e7127f5d2ca09d6839c57753d5aed0983ec1c2f5b6b3e4cd0">
+  <link rel="stylesheet" href="./style.css?v=09c20c92ca50a772c8b058b31070698716ced770ba816aed4ed151f5bcddda73">
 </head>
 <body>
   <main id="game-viewport">
@@ -35,11 +35,11 @@
     </div>
   </section>
   </main>
-  <script src="./orientation.js?v=05912c896a67016e7127f5d2ca09d6839c57753d5aed0983ec1c2f5b6b3e4cd0"></script>
+  <script src="./orientation.js?v=09c20c92ca50a772c8b058b31070698716ced770ba816aed4ed151f5bcddda73"></script>
 <script>
 (function () {
   "use strict";
-  const RELEASE = "05912c896a67016e7127f5d2ca09d6839c57753d5aed0983ec1c2f5b6b3e4cd0";
+  const RELEASE = "09c20c92ca50a772c8b058b31070698716ced770ba816aed4ed151f5bcddda73";
   const base = new URL("./", window.location.href);
   const canvas = document.getElementById("unity-canvas");
   const loading = document.getElementById("loading-screen");
@@ -130,13 +130,13 @@
 
   const config = {
     arguments: [],
-    dataUrl: buildFile("82fc554a7f88037f1a622c9c1bb8cbd5.data.unityweb"),
-    frameworkUrl: buildFile("55e160b7c18680190df9bfd027db34ff.framework.js.unityweb"),
-    codeUrl: buildFile("144ca4c42dd281a8b89c923a3f770beb.wasm.unityweb"),
+    dataUrl: buildFile("2dfe4d5cd6516385eb5b3e765e4cdf69.data.unityweb"),
+    frameworkUrl: buildFile("183ea50a65da8f857166b79af901760b.framework.js.unityweb"),
+    codeUrl: buildFile("f12d750f97b56c2a89f624895a13ff42.wasm.unityweb"),
     streamingAssetsUrl: new URL("StreamingAssets", base).href,
     companyName: "Eryk Potocki",
     productName: "Ageward",
-    productVersion: "2026.11.04.1554",
+    productVersion: "2026.11.05.1343",
     autoSyncPersistentDataPath: true,
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
     showBanner: function (message, type) {
@@ -150,7 +150,7 @@
     return;
   }
   const script = document.createElement("script");
-  script.src = buildFile("33f1ce40d59f4ee774509881125e6fcf.loader.js");
+  script.src = buildFile("8f842878ba8fb719abbdc8ee43e24b9b.loader.js");
   script.onerror = function () { showFailure("Nie można pobrać pliku uruchamiającego Unity. " + script.src); };
   script.onload = function () {
     if (typeof createUnityInstance !== "function") {
