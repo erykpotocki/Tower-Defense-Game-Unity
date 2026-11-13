@@ -19,8 +19,9 @@
     return !!node && (node.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(node.tagName));
   }
   function physicalLayout() {
-    return { width: Math.max(1, root.clientWidth || window.innerWidth || 1),
-      height: Math.max(1, root.clientHeight || window.innerHeight || 1) };
+    const visible = window.visualViewport;
+    return { width: Math.max(1, Math.round(visible?.width || window.innerWidth || root.clientWidth || 1)),
+      height: Math.max(1, Math.round(visible?.height || window.innerHeight || root.clientHeight || 1)) };
   }
   function stableLayout() {
     const size = physicalLayout();
