@@ -1,5 +1,5 @@
 "use strict";
-const RELEASE = "427f3e8488866fc4d96b067918cd7bd87186a9d5cf10126a11a9cfa85c05cdb8";
+const RELEASE = "bc59332f02f7a5d1dd7a9810574d48a57a921edeceb22e826448a588f130dd20";
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = "tower-pwa-" + encodeURIComponent(SCOPE.pathname) + "-";
 const CACHE_NAME = PREFIX + RELEASE;
