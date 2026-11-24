@@ -1,11 +1,11 @@
 {
-  "release": "cbd28bf3fc85d69aef43cce78dcb4a7e411d494fb2461e204a6da50bf4d14b27",
+  "release": "eccea8af29f6c624679b0381cc74b244632b2a88bde7efb66509886ac1bcd51b",
   "files": [
-    "Build/5198411ac1200fb7dd75d4784929184c.framework.js.unityweb",
-    "Build/60e7e69f510dacd0ad61ce65cb618915.loader.js",
+    "Build/0b58586db40aad3b3ac94a17932ce23f.wasm.unityweb",
+    "Build/224603dcd1f6d55951e0389863bed6b6.loader.js",
+    "Build/2fce0b818d2a74ee4690e7edb3c5d632.data.unityweb",
     "Build/88915a79fa38103d293499bc215d2d5f.jpg",
-    "Build/d39a2ec3fc24713bb80570ce9c295dd1.wasm.unityweb",
-    "Build/fcea776aa7ccca7a675762364a03cc9a.data.unityweb",
+    "Build/f8f5681051a2624f0969343d56a0de98.framework.js.unityweb",
     "icons/apple-touch-icon.png",
     "icons/icon-192.png",
     "icons/icon-512.png",
